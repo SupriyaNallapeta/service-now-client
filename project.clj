@@ -1,4 +1,4 @@
-(defproject org.clojars.shaiguitar/snow-client "0.1.0-SNAPSHOT"
+(defproject snow-client "0.1.0-SNAPSHOT"
   :description "API client for service now's api"
   :license "MIT"
   :url "http://github.com/shaiguitar/service-now-client"
