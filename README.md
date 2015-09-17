@@ -2,6 +2,8 @@
 
 Client for the service now API 
 
+[![Clojars Project](http://clojars.org/snow-client/latest-version.svg)](http://clojars.org/snow-client)
+
 # Local usage
 
 You'll need to setup basic auth keys. See `resources/basic-auth.json.example` - move to `basic-auth.json` modify accordingly.
