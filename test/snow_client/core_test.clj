@@ -37,8 +37,8 @@
 ;; INTEGRATION TESTS! (they should work, IF you modify the domains, have access, etc.)
 (fact "CREATING"
       (let [applicationname (gen-uniq "shaitest-")
-            skeleton {:u_email "true", :sys_created_by "rosenfs", :application applicationname , :u_string_1 "FOO",
-                      :u_source "Snow Client #2", :u_auto_ignore "true", :sys_updated_by "rosenfs", :u_auto_page "false", :u_auto_escalate "false", :business_service "Shai Rosenfeld"}]
+            skeleton {:u_email "true", :sys_created_by "foo-user", :application applicationname , :u_string_1 "FOO",
+                      :u_source "Snow Client #2", :u_auto_ignore "true", :sys_updated_by "foo-user", :u_auto_page "false", :u_auto_escalate "false", :business_service "foo bar"}]
         (let [created-resource (first (resource-create skeleton))]
           (:sys_id created-resource) => anything
           (fact "UPDATING"
