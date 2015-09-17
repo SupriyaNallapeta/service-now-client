@@ -37,9 +37,45 @@ The `deftable`s above will automagically get you these functions you can use on 
     (resource-delete 666)                                 => []"
 ```
 
-# What works
+So, to illustrate, assume you had a servicenow account, with an `events` table that has two columns: `severity` and `name`. Interacting with the API would look like this:
 
-There's a clojure macro expansion, which essentially by using (eg `deftable "foo"`) will create "foo-entries", so this can be expanded to any kind of resource. yay metaprogramming.
+```clojure
+
+;; setup the api client:
+
+(deftable event
+  { :base-url "http://your-name.service-now.com/"
+    :basic-auth ["foo", "foopass"] :snow-table "u_events.do"})
+
+;; That's it!
+;; Now you have magical functions you can now use.
+
+;; List events in the table:
+(event-entries []) ;; you can also give it a query here, like (event-entries [:name "foo"])
+
+;; create a new event:
+(event-create {:name "something is bad" :severity "warn" }) ;; returns the created event
+
+;; list that event (looks on name)
+(event-entries [:name "something is bad"])
+
+;; or get the specific event
+(event-entry "1234") ;; the sys_id of the created event
+
+;; update that event
+(event-update {:sys_id "1234" :severity "critical"}) ;; needs the sys_id of the created event
+
+;; delete the event
+(event-delete "1234")
+
+ ;; won't be here now, cause it's deleted
+(event-entry "1234")
+
+```
+
+# How it works
+
+There's a clojure macro expansion, which essentially by using (eg `deftable "foo"`) will create "foo-entries", "foo-entry", "foo-delete", "foo-update" etc, so this can be expanded to any kind of table name. yay metaprogramming.
 
 # Service Now API Docs
 
@@ -56,4 +92,5 @@ There are other apis available though too:
 
 # Next todo
 
-Add in bulk operations (deleteMultiple insertMultiple updateMultiple)
+- Add in bulk operations (deleteMultiple insertMultiple)
+- make query parser more flexible
