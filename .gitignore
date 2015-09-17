@@ -1,0 +1,6 @@
+resources/basic-auth.json
+target/
+.lein-repl-history
+.lein-failures
+.nrepl-history
+.nrepl-port
