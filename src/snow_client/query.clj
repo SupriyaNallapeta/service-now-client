@@ -25,3 +25,20 @@
 (defmethod parse-query :orderby [[_ k query]]
   (let [conditions (parse-query query)]
     (str conditions "^ORDERBY" (name k))))
+
+;; <option value="STARTSWITH">starts with</option>
+;; <option value="ENDSWITH">ends with</option>
+;; <option value="LIKE">contains</option>
+;; <option value="NOT LIKE">does not contain</option>
+;; <option value="=">is</option>
+;; <option value="!=">is not</option>
+;; <option value="ISEMPTY">is empty</option>
+;; <option value="ISNOTEMPTY">is not empty</option>
+;; <option value="ANYTHING">is anything</option>
+;; <option value="IN">is one of</option>
+;; <option value="EMPTYSTRING">is empty string</option>
+;; <option value="&lt;=">less than or is</option>
+;; <option value="&gt;=">greater than or is</option>
+;; <option value="BETWEEN">between</option>
+;; <option value="SAMEAS">is same</option>
+;; <option value="NSAMEAS">is different</option>
