@@ -3,7 +3,7 @@
   <groupId>snow-client</groupId>
   <artifactId>snow-client</artifactId>
   <packaging>jar</packaging>
-  <version>0.1.3-SNAPSHOT</version>
+  <version>0.1.4-SNAPSHOT</version>
   <name>snow-client</name>
   <description>API client for service now's api</description>
   <url>http://github.com/shaiguitar/service-now-client</url>
@@ -15,7 +15,7 @@
   <scm>
     <connection>scm:git:git://github.com/shaiguitar/service-now-client.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/shaiguitar/service-now-client.git</developerConnection>
-    <tag>3cb07b423b933f2fa7c8b2f4835b861311881a73
+    <tag>f0ac7a1f01bbe67286d32b284d961f7a4c4f1dac
 </tag>
     <url>https://github.com/shaiguitar/service-now-client</url>
   </scm>
