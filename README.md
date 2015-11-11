@@ -6,7 +6,8 @@ Client for the service now API
 
 # Local usage
 
-You'll need to setup basic auth keys. See `resources/basic-auth.json.example` - move to `basic-auth.json` modify accordingly.
+You'll need to setup basic auth keys. See `resources/basic-auth.json.example` - move to `basic-auth.json` modify accordingly, you'll probably want to put
+that in your resources folder of your clojure project, after adding the require in project.clj etc.
 
 # Run tests
 
