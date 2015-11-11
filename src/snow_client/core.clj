@@ -8,7 +8,7 @@
 
 ;; service now always puts a "results" key in front of everything.
 ;; (defn parse-records [res] (:results (j/parse-string (:body (u/debug res)) keyword))) with debug
-(defn parse-records [res] (:results (j/parse-string (:body (u/debug res)) keyword)))
+(defn parse-records [res] (:result (j/parse-string (:body (u/debug res)) keyword)))
 
 (defmulti request :method)
 (defmethod request :get [{:keys [auth url]}]
