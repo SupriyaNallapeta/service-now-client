@@ -3,9 +3,11 @@
    [clojure.string :as s]
    [org.httpkit.client :as http]
    [cheshire.core :as j]
+   [snow-client.utils :as u]
    [snow-client.query :as q]])
 
 ;; service now always puts a "records" key in front of everything.
+;; (defn parse-records [res] (:records (j/parse-string (:body (u/debug res)) keyword))) with debug
 (defn parse-records [res] (:records (j/parse-string (:body res) keyword)))
 
 (defmulti request :method)

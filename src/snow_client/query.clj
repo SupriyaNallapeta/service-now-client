@@ -4,31 +4,31 @@
 ;; SNOW QUERY/SQL PARSING API ACCESS AS PER
 ;; http://wiki.servicenow.com/index.php?title=Encoded_Query_Strings#gsc.tab=0JSONv2
 
-(defmulti parse-query first)
-(defmethod parse-query :default [[k v]]
+(defmulti raw-parse-query first)
+(defmethod raw-parse-query :default [[k v]]
   (str (name k) "=" v))
 
-(defmethod parse-query nil [k] "")
+(defmethod raw-parse-query nil [k] "")
 
-;; (parse-query [:and [:created_at now] [:foo bar])
-(defmethod parse-query :and [[_ & query]]
+;; (raw-parse-query [:and [:created_at now] [:foo bar])
+(defmethod raw-parse-query :and [[_ & query]]
   ;; conditions is the parsed string (k=v)
-  (let [conditions (map parse-query query)]
+  (let [conditions (map raw-parse-query query)]
     (s/join "^" conditions)))
 
-;; (parse-query [:or [:created_at now] [:foo bar])
-(defmethod parse-query :or [[_ & query]]
-  (let [conditions (map parse-query query)]
+;; (raw-parse-query [:or [:created_at now] [:foo bar])
+(defmethod raw-parse-query :or [[_ & query]]
+  (let [conditions (map raw-parse-query query)]
     (s/join "^OR" conditions)))
 
-;; (parse-query [:orderby :created_at])
-(defmethod parse-query :orderby [[_ k query]]
-  (let [conditions (parse-query query)]
+;; (raw-parse-query [:orderby :created_at])
+(defmethod raw-parse-query :orderby [[_ k query]]
+  (let [conditions (raw-parse-query query)]
     (str conditions "^ORDERBY" (name k))))
 
-;; (parse-query [:orderby :created_at])
-(defmethod parse-query :orderbydesc [[_ k query]]
-  (let [conditions (parse-query query)]
+;; (raw-parse-query [:orderby :created_at])
+(defmethod raw-parse-query :orderbydesc [[_ k query]]
+  (let [conditions (raw-parse-query query)]
     (str conditions "^ORDERBYDESC" (name k))))
 
 ;; <option value="STARTSWITH">starts with</option>
@@ -47,3 +47,5 @@
 ;; <option value="BETWEEN">between</option>
 ;; <option value="SAMEAS">is same</option>
 ;; <option value="NSAMEAS">is different</option>
+
+(defn parse-query [x] (org.httpkit.client/url-encode (raw-parse-query x)))
