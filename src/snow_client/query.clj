@@ -26,6 +26,11 @@
   (let [conditions (parse-query query)]
     (str conditions "^ORDERBY" (name k))))
 
+;; (parse-query [:orderby :created_at])
+(defmethod parse-query :orderbydesc [[_ k query]]
+  (let [conditions (parse-query query)]
+    (str conditions "^ORDERBYDESC" (name k))))
+
 ;; <option value="STARTSWITH">starts with</option>
 ;; <option value="ENDSWITH">ends with</option>
 ;; <option value="LIKE">contains</option>
