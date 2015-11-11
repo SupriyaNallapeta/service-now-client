@@ -31,11 +31,12 @@
     (resource-update {:sys_id 666 :field1 val1})          => [{updatedrecord}]
     (resource-delete 666)                                 => []"
   `(do
-
-     (defn ~(symbol (str name "-entries")) [query#]
-          (let [params# (q/parse-query query#)
-                url# (str ~base-url ~snow-table "?JSONv2&sysparm_query=" params#)]
-            (request {:method :get :url url# :auth ~basic-auth})))
+     (defn ~(symbol (str name "-entries"))
+       ([query#] (~(symbol (str name "-entries")) query# {:limit 1000}))
+       ([query# {limit# :limit}]
+        (let [params# (q/parse-query query#)
+              url# (str ~base-url ~snow-table "?JSONv2&sysparm_query=" params# "&sysparm_limit=" limit#)]
+          (request {:method :get :url url# :auth ~basic-auth}))))
 
      ;; helper method to not have the entry in an array.
      (defn ~(symbol (str name "-entry")) [id#]

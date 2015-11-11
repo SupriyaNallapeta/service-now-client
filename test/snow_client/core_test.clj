@@ -19,13 +19,16 @@
 (with-redefs [snow-client.core/request (fn [m] (:url m))]
   (fact "resource entries"
         (resource-entries [:and [:created_at "now"] [:name "recordname"]])
-        => "https://fooopsstg.service-now.com/u_resource.do?JSONv2&sysparm_query=created_at%3Dnow%5Ename%3Drecordname")
+        => "https://fooopsstg.service-now.com/u_resource.do?JSONv2&sysparm_query=created_at%3Dnow%5Ename%3Drecordname&sysparm_limit=1000")
+  (fact "resource entries LIMIT"
+        (resource-entries [:and [:created_at "now"] [:name "recordname"]] {:limit 10})
+        => "https://fooopsstg.service-now.com/u_resource.do?JSONv2&sysparm_query=created_at%3Dnow%5Ename%3Drecordname&sysparm_limit=10")
   (fact "incident entries"
         (incident-entries [:sys_id 666])
-        => "https://fooopsstg.service-now.com/u_incidents.do?JSONv2&sysparm_query=sys_id%3D666")
+        => "https://fooopsstg.service-now.com/u_incidents.do?JSONv2&sysparm_query=sys_id%3D666&sysparm_limit=1000")
   (fact "tablename entries"
         (tablename-entries [:or [:created_at "today"] [:name "get-me-any-day"]])
-        => "https://fooopsstg.service-now.com/u_table.do?JSONv2&sysparm_query=created_at%3Dtoday%5EORname%3Dget-me-any-day")
+        => "https://fooopsstg.service-now.com/u_table.do?JSONv2&sysparm_query=created_at%3Dtoday%5EORname%3Dget-me-any-day&sysparm_limit=1000")
   (fact "deftable is a macro that should not fail"
         (macroexpand-1 '(deftable resource {:base-url "http://ehel" :snow-table "route.do"}))
         => anything))
