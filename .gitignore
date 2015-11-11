@@ -1,7 +1,7 @@
 resources/basic-auth.json
 target/
-dev/autodesk-stg.clj
-dev/autodesk-prd.clj
+dev/autodesk_stg.clj
+dev/autodesk_prd.clj
 .lein-repl-history
 .lein-failures
 .nrepl-history

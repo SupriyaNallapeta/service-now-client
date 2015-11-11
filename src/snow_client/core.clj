@@ -32,7 +32,7 @@
 
      (defn ~(symbol (str name "-entries")) [query#]
           (let [params# (q/parse-query query#)
-                url# (str ~base-url ~snow-table ")?JSONv2&sysparm_query=" params#)]
+                url# (str ~base-url ~snow-table "?JSONv2&sysparm_query=" params#)]
             (request {:method :get :url url# :auth ~basic-auth})))
 
      ;; helper method to not have the entry in an array.

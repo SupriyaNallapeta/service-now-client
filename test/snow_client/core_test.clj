@@ -19,13 +19,13 @@
 (with-redefs [snow-client.core/request (fn [m] (:url m))]
   (fact "resource entries"
         (resource-entries [:and [:created_at "now"] [:name "recordname"]])
-        => "https://fooopsstg.service-now.com/u_cloudops_application_resource_list.do?JSONv2&sysparm_query=created_at=now^name=recordname")
+        => "https://fooopsstg.service-now.com/u_resource.do?JSONv2&sysparm_query=created_at=now^name=recordname")
   (fact "incident entries"
         (incident-entries [:sys_id 666])
         => "https://fooopsstg.service-now.com/u_incidents.do?JSONv2&sysparm_query=sys_id=666")
   (fact "tablename entries"
         (tablename-entries [:or [:created_at "today"] [:name "get-me-any-day"]])
-        => "https://fooopsstg.service-now.com/u_tablenames.do?JSONv2&sysparm_query=created_at=today^ORname=get-me-any-day")
+        => "https://fooopsstg.service-now.com/u_table.do?JSONv2&sysparm_query=created_at=today^ORname=get-me-any-day")
   (fact "deftable is a macro that should not fail"
         (macroexpand-1 '(deftable resource {:base-url "http://ehel" :snow-table "route.do"}))
         => anything))
