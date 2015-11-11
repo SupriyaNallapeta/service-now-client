@@ -15,7 +15,7 @@
   <scm>
     <connection>scm:git:git://github.com/shaiguitar/service-now-client.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/shaiguitar/service-now-client.git</developerConnection>
-    <tag>5a357f5653750b505c8935cb67dc3174f10b5428
+    <tag>755c8fe5762afc8131671c06a9e1e8928eeedc6a
 </tag>
     <url>https://github.com/shaiguitar/service-now-client</url>
   </scm>
