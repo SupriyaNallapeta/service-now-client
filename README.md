@@ -88,7 +88,7 @@ This is mostly based on this api:
 
 There are other apis available though too:
 
-[docs table api](http: //wiki.servicenow.com/index.php?title=Table_API#POST_.2Fapi.2Fnow.2Fv1.2Ftable.2F.28tableName.29&gsc.tab=0)
+[docs table api](http://wiki.servicenow.com/index.php?title=Table_API#POST_.2Fapi.2Fnow.2Fv1.2Ftable.2F.28tableName.29&gsc.tab=0)
 [docs rest api](http://wiki.servicenow.com/index.php?title=REST_API#Security&gsc.tab=0)
 
 # Next todo
