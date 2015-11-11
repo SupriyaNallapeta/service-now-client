@@ -1,4 +1,4 @@
-(defproject snow-client "0.1.3-SNAPSHOT"
+(defproject snow-client "0.1.4-SNAPSHOT"
   :description "API client for service now's api"
   :license "MIT"
   :url "http://github.com/shaiguitar/service-now-client"

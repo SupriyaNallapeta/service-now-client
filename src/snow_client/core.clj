@@ -6,9 +6,9 @@
    [snow-client.utils :as u]
    [snow-client.query :as q]])
 
-;; service now always puts a "records" key in front of everything.
-;; (defn parse-records [res] (:records (j/parse-string (:body (u/debug res)) keyword))) with debug
-(defn parse-records [res] (:records (j/parse-string (:body res) keyword)))
+;; service now always puts a "results" key in front of everything.
+;; (defn parse-records [res] (:results (j/parse-string (:body (u/debug res)) keyword))) with debug
+(defn parse-records [res] (:results (j/parse-string (:body (u/debug res)) keyword)))
 
 (defmulti request :method)
 (defmethod request :get [{:keys [auth url]}]
