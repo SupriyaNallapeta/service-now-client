@@ -95,3 +95,7 @@ There are other apis available though too:
 
 - Add in bulk operations (deleteMultiple insertMultiple)
 - make query parser more flexible
+
+# Releasing
+
+`lein deploy clojars`

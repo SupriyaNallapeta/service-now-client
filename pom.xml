@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.clojars.shaiguitar</groupId>
+  <groupId>snow-client</groupId>
   <artifactId>snow-client</artifactId>
   <packaging>jar</packaging>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.1.1-SNAPSHOT</version>
   <name>snow-client</name>
   <description>API client for service now's api</description>
   <url>http://github.com/shaiguitar/service-now-client</url>
@@ -15,7 +15,7 @@
   <scm>
     <connection>scm:git:git://github.com/shaiguitar/service-now-client.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/shaiguitar/service-now-client.git</developerConnection>
-    <tag>f02a1fa0565d0658a322e05329523b41b37aac91
+    <tag>555067c64fc1f762d4ae2febe83c1ac80b0b9ac3
 </tag>
     <url>https://github.com/shaiguitar/service-now-client</url>
   </scm>
