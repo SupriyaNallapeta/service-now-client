@@ -12,7 +12,7 @@
 
 (defmulti request :method)
 (defmethod request :get [{:keys [auth url]}]
-  (parse-records @(http/get url {:basic-auth auth})))
+  (parse-records @(http/get url {:basic-auth auth :headers {"Accept" "application/json"}})))
 
 (defmethod request :post [{:keys [auth url data]}]
   (parse-records @(http/post url (merge {:basic-auth auth} {:body (j/encode data)} {:headers {"Content-Type" "application/json"} }))))
@@ -35,7 +35,7 @@
        ([query#] (~(symbol (str name "-entries")) query# {:limit 1000}))
        ([query# {limit# :limit}]
         (let [params# (q/parse-query query#)
-              url# (str ~base-url ~snow-table "?JSONv2&sysparm_query=" params# "&sysparm_limit=" limit#)]
+              url# (str ~base-url ~snow-table "?sysparm_query=" params# "&sysparm_limit=" limit#)]
           (request {:method :get :url url# :auth ~basic-auth}))))
 
      ;; helper method to not have the entry in an array.
@@ -45,17 +45,17 @@
      ;; (resource-create {:your "field" :values "are" :sent "over"})
        (defn ~(symbol (str name "-create")) [data#]
          (let [json# (j/encode data#)
-               url# (str ~base-url ~snow-table "?JSONv2&sysparm_action=insert")]
+               url# (str ~base-url ~snow-table "?sysparm_action=insert")]
            (request {:method :post :url url# :auth ~basic-auth :data data#})))
 
        ;; (resource-update {:your "updated" :values "are" :sent "over"})
        (defn ~(symbol (str name "-update")) [data#]
          (let [json# (j/encode data#)
                sys_id# (:sys_id data#)
-               url# (str ~base-url ~snow-table "?JSONv2&sysparm_action=update&sysparm_query=sys_id=" sys_id#)]
+               url# (str ~base-url ~snow-table "?sysparm_action=update&sysparm_query=sys_id=" sys_id#)]
            (request {:method :post :url url# :auth ~basic-auth :data data#})))
 
        ;; (resource-delete sys_id)
        (defn ~(symbol (str name "-delete")) [id#]
-         (let [url# (str ~base-url ~snow-table "?JSONv2&sysparm_action=deleteRecord&sysparm_sys_id=" id#)]
+         (let [url# (str ~base-url ~snow-table "?sysparm_action=deleteRecord&sysparm_sys_id=" id#)]
            (request {:method :post :url url# :auth ~basic-auth})))))
