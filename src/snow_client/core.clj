@@ -27,7 +27,7 @@
    [this query]
    [this query limit])
   (entry  [this id])
-  (create [this data])
+  (create-entity [this data])
   (update-entity [this data])
   (delete [this id]))
 
@@ -41,8 +41,8 @@
           url (str base-url snow-table "?sysparm_query=" params "&sysparm_limit=" limit)]
       (request {:method :get :url url :auth basic-auth})))
   (entry [this id]
-    (first (entries this [:sys_id id] 1)))
-  (create [this data]
+    (entries this [:sys_id id] 1))
+  (create-entity [this data]
     (let [json (j/encode data)
           url (str base-url snow-table "?sysparm_action=insert")]
       (request {:method :post :url url :auth basic-auth :data data})))
@@ -56,6 +56,7 @@
       (request {:method :post :url url :auth basic-auth}))))
 
 
+(defn get-hrefs )
 
 (defmacro deftable [name {:keys [base-url snow-table basic-auth]}]
   "(deftable resource {:base-url domain :basic-auth [un, pass] :snow-table u_resource.do}) generates the following functions:
