@@ -22,6 +22,41 @@
 
 ;; clojure is crazy awesome or just crazy?
 
+(defprotocol Tabel
+  (entries
+   [this query]
+   [this query limit])
+  (entry  [this id])
+  (create [this data])
+  (update-entity [this data])
+  (delete [this id]))
+
+(defrecord SnowTable
+    [base-url snow-table basic-auth default-limit]
+  Tabel
+  (entries [this query]
+    (entries this query {:limit  default-limit}))
+  (entries [this query {:keys [limit]}]
+    (let [params (q/parse-query query)
+          url (str base-url snow-table "?sysparm_query=" params "&sysparm_limit=" limit)]
+      (request {:method :get :url url :auth basic-auth})))
+  (entry [this id]
+    (first (entries this [:sys_id id] 1)))
+  (create [this data]
+    (let [json (j/encode data)
+          url (str base-url snow-table "?sysparm_action=insert")]
+      (request {:method :post :url url :auth basic-auth :data data})))
+  (update-entity [this data]
+    (let [json (j/encode data)
+          sys_id (:sys_id data)
+          url (str base-url snow-table "?sysparm_action=update&sysparm_query=sys_id=" sys_id)]
+      (request {:method :post :url url :auth basic-auth :data data})))
+  (delete [this id]
+    (let [url (str base-url snow-table "?sysparm_action=deleteRecord&sysparm_sys_id=" id)]
+      (request {:method :post :url url :auth basic-auth}))))
+
+
+
 (defmacro deftable [name {:keys [base-url snow-table basic-auth]}]
   "(deftable resource {:base-url domain :basic-auth [un, pass] :snow-table u_resource.do}) generates the following functions:
 
