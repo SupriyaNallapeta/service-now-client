@@ -3,7 +3,7 @@
   <groupId>snow-client</groupId>
   <artifactId>snow-client</artifactId>
   <packaging>jar</packaging>
-  <version>0.1.6-SNAPSHOT</version>
+  <version>0.1.7-SNAPSHOT</version>
   <name>snow-client</name>
   <description>API client for service now's api</description>
   <url>http://github.com/shaiguitar/service-now-client</url>
@@ -15,7 +15,7 @@
   <scm>
     <connection>scm:git:git://github.com/shaiguitar/service-now-client.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/shaiguitar/service-now-client.git</developerConnection>
-    <tag>9fa6742e4c0ccb87be67e9ec6c468feaafc8efe0
+    <tag>c9d0d40a879b78d429c1a26b2f1e593399a84e5e
 </tag>
     <url>https://github.com/shaiguitar/service-now-client</url>
   </scm>
@@ -92,6 +92,11 @@
       <groupId>http-kit</groupId>
       <artifactId>http-kit</artifactId>
       <version>2.1.18</version>
+    </dependency>
+    <dependency>
+      <groupId>http-kit.fake</groupId>
+      <artifactId>http-kit.fake</artifactId>
+      <version>0.2.1</version>
     </dependency>
     <dependency>
       <groupId>cheshire</groupId>
