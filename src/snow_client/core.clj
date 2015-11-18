@@ -3,6 +3,7 @@
    [clojure.string :as s]
    [org.httpkit.client :as http]
    [cheshire.core :as j]
+   [clojure.walk :as walk]
    [snow-client.utils :as u]
    [snow-client.query :as q]])
 
@@ -56,42 +57,18 @@
       (request {:method :post :url url :auth basic-auth}))))
 
 
-(defn get-hrefs )
+(defn href? [m]
+  (not (nil? (:href m))))
 
-(defmacro deftable [name {:keys [base-url snow-table basic-auth]}]
-  "(deftable resource {:base-url domain :basic-auth [un, pass] :snow-table u_resource.do}) generates the following functions:
+(defn get-hrefs [{:keys [href] :as b} basic-auth]
+  (request {:method :get :url href :auth basic-auth}))
 
-    (resource-entry 666)                                  => {record1}
-    (resource-entries [:or [:name foobar] [:field foo]])  => [{record1} {record2}]
-    (resource-create {:field1 val1 :field2 val2})         => [{newrecord}]
-    (resource-update {:sys_id 666 :field1 val1})          => [{updatedrecord}]
-    (resource-delete 666)                                 => []"
-  `(do
-     (defn ~(symbol (str name "-entries"))
-       ([query#] (~(symbol (str name "-entries")) query# {:limit 1000}))
-       ([query# {limit# :limit}]
-        (let [params# (q/parse-query query#)
-              url# (str ~base-url ~snow-table "?sysparm_query=" params# "&sysparm_limit=" limit#)]
-          (request {:method :get :url url# :auth ~basic-auth}))))
+(defn maybe-update [basic-auth [k v]]
+  (if (href? v)
+    [k (get-hrefs v basic-auth)]
+    (if (map? v)
+      [k (walk-hrefs v basic-auth)]
+      [k v])))
 
-     ;; helper method to not have the entry in an array.
-     (defn ~(symbol (str name "-entry")) [id#]
-       (first (~(symbol (str name "-entries")) [:sys_id id#])))
-
-     ;; (resource-create {:your "field" :values "are" :sent "over"})
-       (defn ~(symbol (str name "-create")) [data#]
-         (let [json# (j/encode data#)
-               url# (str ~base-url ~snow-table "?sysparm_action=insert")]
-           (request {:method :post :url url# :auth ~basic-auth :data data#})))
-
-       ;; (resource-update {:your "updated" :values "are" :sent "over"})
-       (defn ~(symbol (str name "-update")) [data#]
-         (let [json# (j/encode data#)
-               sys_id# (:sys_id data#)
-               url# (str ~base-url ~snow-table "?sysparm_action=update&sysparm_query=sys_id=" sys_id#)]
-           (request {:method :post :url url# :auth ~basic-auth :data data#})))
-
-       ;; (resource-delete sys_id)
-       (defn ~(symbol (str name "-delete")) [id#]
-         (let [url# (str ~base-url ~snow-table "?sysparm_action=deleteRecord&sysparm_sys_id=" id#)]
-           (request {:method :post :url url# :auth ~basic-auth})))))
+(defn walk-hrefs [tree basic-auth]
+  (walk/walk (partial maybe-update basic-auth) identity tree))

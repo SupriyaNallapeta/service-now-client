@@ -1,6 +1,6 @@
 (ns snow-client.core-test
   [:use midje.sweet org.httpkit.fake]
-  (:require [snow-client.core :refer [deftable map->SnowTable entries update-entity entry create-entity delete]]
+  (:require [snow-client.core :refer [map->SnowTable entries update-entity entry create-entity delete walk-hrefs href? maybe-update]]
             [cheshire.core :as j]
             [snow-client.utils :as u]
             [clojure.test :as t]))
@@ -100,5 +100,35 @@
 
 
 
+(with-fake-http [{:url "https://magicmagicmagic.com/more"
+                  :method :get}
+                 {:status 200 :body (j/encode {:result {:a "hello"}})}]
+  (fact "using my magic walker should replace hrefs with things"
+        (walk-hrefs {:r  {:href "https://magicmagicmagic.com/more" }} ["a" "b"]) => {:r  {:a "hello"}})
+
+  (fact "using my magic walker should replace hrefs with things"
+        (walk-hrefs {:r  {:a
+                          {:b
+                           {:href "https://magicmagicmagic.com/more" :herp :erp}}
+                          :g {:href "https://magicmagicmagic.com/more"}}}
+                    ["a" "b"]) =>
+        {:r  {:a {:b {:a "hello"}} :g {:a "hello"}}}))
+
+
+(fact "href? should return false if there is no href in the tree at this level"
+      (href? {:a {:href "hello"}}) => false)
+
+(fact "href? should return false if there is a href in the tree at this level"
+      (href? { :href "hello"}) => true)
+
+(with-fake-http [{:url "https://magicmagicmagic.com/more"
+                  :method :get}
+                 {:status 200 :body (j/encode {:result {:a "hello"}})}]
+
+  (fact "maybe-update should return try to update the tree if there is a href"
+        (maybe-update ["a" "b"] [:b  { :href "https://magicmagicmagic.com/more"}] ) => [:b {  :a "hello"}])
+
+  (fact "maybe-update should return try to update the tree if there is a href"
+        (maybe-update ["a" "b"] [:c  {:a  { :href "https://magicmagicmagic.com/more"}}] ) => [:c {:a  { :a "hello"}}]))
 
 
