@@ -51,30 +51,29 @@ So, to illustrate, assume you had a servicenow account, with an `events` table t
 
 ```clojure
 
-;; setup the api client:
-;; That's it!
-;; Now you have magical functions you can now use.
+(ns prd
+  (:require [snow-client.core :refer :all]
+            [cheshire.core :as j]
+            [clojure.test :as t]))
 
-;; List events in the table:
-(entires event []) ;; you can also give it a query here, like (event-entries [:name "foo"])
+(def basic-auth (j/parse-string (slurp "resources/basic-auth.json"))) ; ["un", "pass"]
+(def domain "https://foo.service-now.com/api/now/v1/table/")
 
-;; create a new event:
-(create-entity event- {:name "something is bad" :severity "warn" }) ;; returns the created event
+(def service (map->SnowTable  { :base-url domain :basic-auth basic-auth
+                               :default-limit 10
+                               :snow-table "u_service"}))
 
-;; list that event (looks on name)
-(entires event [:name "something is bad"])
+(def router  (map->SnowTable  { :base-url domain :basic-auth basic-auth
+                               :default-limit 10
+                               :snow-table "u_router"}))
 
-;; or get the specific event
-(entry event "1234") ;; the sys_id of the created event
+(def events  (map->SnowTable  { :base-url domain
+                              :default-limit 10
+                              :basic-auth basic-auth
+                              :snow-table "u_events"}))
 
-;; update that event
-(update-entity event {:sys_id "1234" :severity "critical"}) ;; needs the sys_id of the created event
-
-;; delete the event
-(delete event"1234")
-
- ;; won't be here now, cause it's deleted
-(entry event "1234")
+(defn events-10 [] ;; default-limit
+  (entries events))
 
 ```
 
