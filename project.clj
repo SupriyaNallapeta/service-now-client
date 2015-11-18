@@ -4,6 +4,7 @@
   :url "http://github.com/shaiguitar/service-now-client"
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [http-kit "2.1.18"]
+                 [http-kit.fake "0.2.1"]
                  [cheshire "5.5.0"]
                  [midje "1.7.0"]
                  [org.clojure/clojure "1.7.0"]]
