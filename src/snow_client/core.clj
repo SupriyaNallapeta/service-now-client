@@ -9,8 +9,13 @@
 
 ;; service now always puts a "results" key in front of everything.
 ;; (defn parse-records [res] (:results (j/parse-string (:body (u/debug res)) keyword))) with debug
-(defn parse-records [res] (:result (j/parse-string (:body res) keyword)))
+(defn- parse-records
+  "all service now requests come back wrapped in result and need to be keywordified"
+  [res]
+  (:result (j/parse-string (:body res) keyword)))
 
+
+;;multimethod for doing requests to service now
 (defmulti request :method)
 (defmethod request :get [{:keys [auth url]}]
   (parse-records @(http/get url {:basic-auth auth :headers {"Accept" "application/json"}})))
@@ -23,6 +28,7 @@
 
 ;; clojure is crazy awesome or just crazy?
 
+;;Protocol that defines a table, basic CRUD
 (defprotocol Tabel
   (entries
    [this]
@@ -33,6 +39,7 @@
   (update-entity [this data])
   (delete [this id]))
 
+;;Implementation of Table to talk with service now
 (defrecord SnowTable
     [base-url snow-table basic-auth default-limit]
   Tabel
@@ -59,20 +66,32 @@
     (let [url (str base-url snow-table "?sysparm_action=deleteRecord&sysparm_sys_id=" id)]
       (request {:method :post :url url :auth basic-auth}))))
 
-(defn link? [m]
+(defn link?
+  "checks if a map contains the key :link"
+  [m]
   (not (nil? (:link m))))
 
-(defn get-links [{:keys [link] :as b} basic-auth]
+(defn get-links
+  "returns a map containing the values at that this link"
+  [{:keys [link] :as b} basic-auth]
   (request {:method :get :url link :auth basic-auth}))
 
 (declare walk-links)
 
-(defn maybe-update [basic-auth [k v]]
+(defn maybe-update
+  "Takes a basic-auth vector [un password] and a k v pair from a tree.
+  if that v contains the key link then it replaces it with the data that v
+  refers to"
+  [basic-auth [k v]]
+  ""
   (if (link? v)
     [k (get-links v basic-auth)]
     (if (map? v)
       [k (walk-links v basic-auth)]
       [k v])))
 
-(defn walk-links [tree basic-auth]
+(defn walk-links
+  "walks a tree and replaces all of the links with values that they are reffering too
+  takes a tree (response from SnowTable) and basic-auth [un password]"
+  [tree basic-auth]
   (walk/walk (partial maybe-update basic-auth) identity tree))
