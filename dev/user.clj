@@ -7,10 +7,6 @@
 (def staging-domain "https://foocloudopsstg.service-now.com/api/now/v1/table")
 (def basic-auth ["u" "p"])
 
-
-
-(def creds (  (juxt :username :password) config))
-
 (def service (map->SnowTable  { :base-url staging-domain :basic-auth basic-auth :snow-table "u_service"}))
 (def event   (map->SnowTable  { :base-url (:url config) :basic-auth ((juxt :username :password ) config) :snow-table "u_events" :default-limit 2}))
  
