@@ -1,6 +1,6 @@
 (ns snow-client.core-test
   [:use midje.sweet org.httpkit.fake]
-  (:require [snow-client.core :refer [map->SnowTable entries update-entity entry create-entity delete walk-hrefs href? maybe-update]]
+  (:require [snow-client.core :refer [map->SnowTable entries update-entity entry create-entity delete walk-links link? maybe-update]]
             [cheshire.core :as j]
             [snow-client.utils :as u]
             [clojure.test :as t]))
@@ -56,8 +56,6 @@
 (def mock-item (gen-fake "shaitest-1"))
 (def changes {:u_email "false" :u_source "snow-client", :application "shaitest-2"})
 
-
-;; INTEGRATION TESTS! (they should work, IF you modify the domains, have access, etc.)
 (with-fake-http [{:url "https://fooopsstg.service-now.com/api/now/v1/table/u_resource?sysparm_action=insert"
                   :method :post
                   :basic-auth basic-auth
@@ -84,8 +82,7 @@
                   :basic-auth basic-auth
                   :headers {"Content-Type" "application/json"}}
                  {:status 200
-                  :body (j/encode  {:result :ok})}
-                 ]
+                  :body (j/encode  {:result :ok})}]
 
 (fact "CREATING should return sys_id"
       (let [created-resource (create-entity resource-table mock-item)]
@@ -104,31 +101,31 @@
                   :method :get}
                  {:status 200 :body (j/encode {:result {:a "hello"}})}]
   (fact "using my magic walker should replace hrefs with things"
-        (walk-hrefs {:r  {:href "https://magicmagicmagic.com/more" }} ["a" "b"]) => {:r  {:a "hello"}})
+        (walk-links {:r  {:link "https://magicmagicmagic.com/more" }} ["a" "b"]) => {:r  {:a "hello"}})
 
   (fact "using my magic walker should replace hrefs with things"
-        (walk-hrefs {:r  {:a
+        (walk-links {:r  {:a
                           {:b
-                           {:href "https://magicmagicmagic.com/more" :herp :erp}}
-                          :g {:href "https://magicmagicmagic.com/more"}}}
+                           {:link "https://magicmagicmagic.com/more" :herp :erp}}
+                          :g {:link "https://magicmagicmagic.com/more"}}}
                     ["a" "b"]) =>
         {:r  {:a {:b {:a "hello"}} :g {:a "hello"}}}))
 
 
 (fact "href? should return false if there is no href in the tree at this level"
-      (href? {:a {:href "hello"}}) => false)
+      (link? {:a {:link "hello"}}) => false)
 
 (fact "href? should return false if there is a href in the tree at this level"
-      (href? { :href "hello"}) => true)
+      (link? { :link "hello"}) => true)
 
 (with-fake-http [{:url "https://magicmagicmagic.com/more"
                   :method :get}
                  {:status 200 :body (j/encode {:result {:a "hello"}})}]
 
   (fact "maybe-update should return try to update the tree if there is a href"
-        (maybe-update ["a" "b"] [:b  { :href "https://magicmagicmagic.com/more"}] ) => [:b {  :a "hello"}])
+        (maybe-update ["a" "b"] [:b  { :link "https://magicmagicmagic.com/more"}] ) => [:b {  :a "hello"}])
 
   (fact "maybe-update should return try to update the tree if there is a href"
-        (maybe-update ["a" "b"] [:c  {:a  { :href "https://magicmagicmagic.com/more"}}] ) => [:c {:a  { :a "hello"}}]))
+        (maybe-update ["a" "b"] [:c  {:a  { :link "https://magicmagicmagic.com/more"}}] ) => [:c {:a  { :a "hello"}}]))
 
 

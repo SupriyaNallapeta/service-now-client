@@ -25,6 +25,7 @@
 
 (defprotocol Tabel
   (entries
+   [this]
    [this query]
    [this query limit])
   (entry  [this id])
@@ -35,8 +36,10 @@
 (defrecord SnowTable
     [base-url snow-table basic-auth default-limit]
   Tabel
+  (entries [this]
+    (entries this []))
   (entries [this query]
-    (entries this query {:limit  default-limit}))
+    (entries this query {:limit  (or default-limit 10)}))
   (entries [this query {:keys [limit]}]
     (let [params (q/parse-query query)
           url (str base-url snow-table "?sysparm_query=" params "&sysparm_limit=" limit)]
@@ -56,19 +59,20 @@
     (let [url (str base-url snow-table "?sysparm_action=deleteRecord&sysparm_sys_id=" id)]
       (request {:method :post :url url :auth basic-auth}))))
 
+(defn link? [m]
+  (not (nil? (:link m))))
 
-(defn href? [m]
-  (not (nil? (:href m))))
+(defn get-links [{:keys [link] :as b} basic-auth]
+  (request {:method :get :url link :auth basic-auth}))
 
-(defn get-hrefs [{:keys [href] :as b} basic-auth]
-  (request {:method :get :url href :auth basic-auth}))
+(declare walk-links)
 
 (defn maybe-update [basic-auth [k v]]
-  (if (href? v)
-    [k (get-hrefs v basic-auth)]
+  (if (link? v)
+    [k (get-links v basic-auth)]
     (if (map? v)
-      [k (walk-hrefs v basic-auth)]
+      [k (walk-links v basic-auth)]
       [k v])))
 
-(defn walk-hrefs [tree basic-auth]
+(defn walk-links [tree basic-auth]
   (walk/walk (partial maybe-update basic-auth) identity tree))
