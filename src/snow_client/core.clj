@@ -12,7 +12,7 @@
 (defn- parse-records
   "all service now requests come back wrapped in result and need to be keywordified"
   [res]
-  (:result (j/parse-string (:body res) keyword)))
+  (:result (j/parse-string (:body (u/debug  res)) keyword)))
 
 
 ;;multimethod for doing requests to service now

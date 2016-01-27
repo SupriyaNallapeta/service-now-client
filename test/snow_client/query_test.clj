@@ -18,5 +18,10 @@
 (fact "parsing query util helper created by DESC"
 (u/raw-parse-query  [:orderbydesc :created_at [:and [:foo "bar"] [:or [:created_at "today"] [:sys_id 666]]]]) => "foo=bar^created_at=today^ORsys_id=666^ORDERBYDESCcreated_at")
 
+
+(fact "parsing query util helper created by DESC"
+      (u/raw-parse-query  [:+ [:orderbydesc :created_at]  [:and [:foo "bar"] [:or [:created_at "today"] [:sys_id 666]]]]) => "foo=bar^created_at=today^ORsys_id=666^ORDERBYDESCcreated_at")
+
+
 (fact "parsing query util helper dealybob empty query"
       (u/raw-parse-query []) => "")

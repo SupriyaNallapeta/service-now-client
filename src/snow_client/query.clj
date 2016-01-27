@@ -10,6 +10,13 @@
 
 (defmethod raw-parse-query nil [k] "")
 
+
+(defmethod raw-parse-query :+ [[_ qleft qright]]
+  (let [leftq (raw-parse-query qleft)
+        rightq (raw-parse-query qright)]
+    (str leftq rightq)))
+
+
 ;; (raw-parse-query [:and [:created_at now] [:foo bar])
 (defmethod raw-parse-query :and [[_ & query]]
   ;; conditions is the parsed string (k=v)
